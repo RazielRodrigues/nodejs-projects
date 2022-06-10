@@ -1,8 +1,6 @@
 FROM node:14-alpine AS development
 ENV NODE_ENV development
 
-RUN apk add --no-cache nodejs npm
-
 # Add a work directory
 WORKDIR /app
 
