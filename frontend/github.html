@@ -1,0 +1,132 @@
+<html>
+
+<head>
+    <meta charset='utf-8'>
+    <title>Github Repositorios</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/css/bootstrap.min.css"
+        integrity="sha384-zCbKRCUGaJDkqS1kPbPd7TveP5iyJE0EjAuZQTgFLD2ylzuqKfdKlfG/eSrtxUkn" crossorigin="anonymous">
+</head>
+
+<body>
+
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <a class="navbar-brand" href="#">NODE APP </a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
+            aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav">
+                <li class="nav-item active">
+                    <a class="nav-link" href="/">Cadastro <span class="sr-only">(current)</span></a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/github.html">Github</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/skyscanner.html">Skyscanner</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="container mt-5">
+
+        <div class="row">
+            <div class="col-md-12">
+                <div class="form-group">
+                    <input class="form-control" type="text" name="buscar" id="buscar" placeholder="Nome de usuario">
+                </div>
+                <button class="btn btn-primary" id="btn-buscar" onclick="getRepositorios()">Buscar</button>
+                <button class="btn btn-primary" id="btn-buscar" onclick="getRepositoriosSalvos()">Ver Repositorios</button>
+            </div>
+        </div>
+
+        <div class="row mt-2">
+            <div class="col-md-12">
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th scope="col">#</th>
+                            <th scope="col">Nome</th>
+                            <th scope="col">Descrição</th>
+                            <th scope="col">Linguagem</th>
+                            <th scope="col">URL</th>
+                    </thead>
+                    <tbody id="table"></tbody>
+                </table>
+            </div>
+        </div>
+
+    </div>
+
+</body>
+
+<script>
+
+    async function getRepositorios() {
+        if (document.getElementById('buscar').value == '') {
+            alert('Preencha o campo de busca');
+            return;
+        }
+        const buscar = document.getElementById('buscar').value;
+        document.getElementById('table').innerHTML = '';
+        await fetch('https://api.github.com/users/' + buscar + '/repos')
+            .then(response => response.json())
+            .then(repositorios => {
+                repositorios.forEach(repositorio => {
+                    let linha = document.createElement('tr');
+                    linha.innerHTML = `
+                        <th scope="row">${repositorio.id}</th>
+                        <td>${repositorio.name}</td>
+                        <td>${repositorio.description}</td>
+                        <td>${repositorio.language}</td>
+                        <td>
+                            <a href="${repositorio.html_url}" target="_blank">
+                                ${repositorio.html_url}
+                            </a>
+                        </td>
+                    `;
+                    document.getElementById('table').append(linha);
+                });
+                const x = JSON.stringify({
+                    username: username,
+                    repositorios: repositorios
+                });
+                saveRepositorios(buscar, x);
+            });
+    }
+
+    function saveRepositorios(username, repositorios){
+        // fetch('http://localhost/github', {
+        //     method: 'POST',
+        //     headers: {
+        //         'Content-Type': 'application/json'
+        //     },
+        //     body: JSON.stringify({
+        //         username: username,
+        //         repositorios: repositorios
+        //     })
+        // });
+    }
+
+    function getRepositoriosSalvos(){
+        fetch('http://localhost/github')
+        .then(response => response.json())
+        .then(data => {
+            console.log(data);
+            // data.forEach(repositorio => {
+            //     let linha = document.createElement('tr');
+            //     linha.innerHTML = `
+            //         <th scope="row">${repositorio.id}</th>
+            //         <td>${repositorio.username}</td>
+            //         <td>${repositorio.repositorios}</td>
+            //     `;
+            //     document.getElementById('table').append(linha);
+            // });
+        });
+    }
+
+</script>
+
+</html>
