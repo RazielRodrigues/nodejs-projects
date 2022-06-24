@@ -13,13 +13,13 @@ class Database {
 
     async obterDadosArquivo(){
         const arquivo = await readFileAsync(this.NOME_ARQUIVO, 'utf8');
-        return JSON.parse(arquivo).toString();
+        return JSON.parse(arquivo.toString());
     }
 
     async listar(id){
         const dados = await this.obterDadosArquivo();
-        const dadosFiltrados = dados.filter(item => (id ? (item.id === id) : true));
-        return null
+        const dadosFiltrados = dados.filter( item => (id ? (item.id === id) : true ));
+        return dadosFiltrados;
     }
 
     escreverArquivo(){}
