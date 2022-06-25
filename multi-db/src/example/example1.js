@@ -57,7 +57,7 @@ class ContextoStrategy extends ICrud {
 
 const contextMongo = new ContextoStrategy(new MongoDBStrategy());
 contextMongo.create();
+const context = new ContextoStrategy(new PostgreSQLStrategy());
+context.create();
 
-const contextPostgres = new ContextoStrategy(new PostgreSQLStrategy());
-contextPostgres.create();
-contextPostgres.read();
+// context.read();

@@ -20,7 +20,7 @@ class IDb {
   isConnected(id) {
     throw new NotImplementedException();
   }
-  connect() {
+  connect(){
     throw new NotImplementedException();
   }
 }
