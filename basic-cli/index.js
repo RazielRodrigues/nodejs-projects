@@ -1,30 +1,35 @@
-const Commander = require('commander');
+const { Command } = require('commander');
 const Database = require('./database');
 const Heroi = require('./heroi');
 
-async function main(){
-    Commander
+async function main() {
+    const program = new Command();
+
+    program
         .version('v1')
+
         .option('-n, --nome [value]', "Nome do heroi")
         .option('-p, --poder [value]', "Poder do heroi")
-        .option('-i, --id [value]', "id do heroi")
+        .option('-i, --id [value]', "ID do heroi")
 
-        .option('-c, --cadastrar [value]', "Cadastrar do heroi")
-        .option('-l, --listar [value]', "Listar herois")
-        .option('-r, --remover', "Remove heroi pelo id")
-        .option('-a, --atualizar [value]', "Atualizar heroi pelo id")
-        .parse(process.argv);
-    
-    const heroi = new Heroi(Commander);
+        // CRUD
+        .option('-c, --cadastrar', "Cadastrar heroi")
+        .option('-r, --listar', "Listar herois")
+        .option('-u, --atualizar [value]', "Atualizar heroi pelo id")
+        .option('-d, --remover', "Remover heroi pelo id")
 
+    program.parse(program.argv);
+
+    const options = program.opts();
+    const heroi = new Heroi(options);
 
     try {
 
-        if (Commander.cadastrar) {
+        if (options.cadastrar) {
             delete heroi.id;
-            
+
             const resultado = await Database.cadastrar(heroi);
-            if(!resultado) {
+            if (!resultado) {
                 console.error('Heroi nao cadastrado');
                 return;
             }
@@ -33,15 +38,16 @@ async function main(){
             return;
         }
 
-        if (Commander.listar) {
+        if (options.listar) {
             const resultado = await Database.listar();
-            console.log(resultado);
+            console.table(resultado);
             return;
         }
 
-        if (Commander.remover) {
+        if (options.remover) {
+            
             const resultado = await Database.remover(heroi.id);
-            if(!resultado) {
+            if (!resultado) {
                 console.error('Não foi possivel remover o heroi!');
                 return;
             }
@@ -50,23 +56,29 @@ async function main(){
             return;
         }
 
-        if (Commander.atualizar) {
-            const idParaATualizar = partseInt(Commander.atualizar);
-            delete heroi.id;
+        if (options.atualizar) {
 
+
+            delete heroi.id;
+            
+            const idParaATualizar = parseInt(options.atualizar);
             const dado = JSON.stringify(heroi);
             const heroiAtualizar = JSON.parse(dado);
-            const resultado = await DAtabase.atualizar(idParaATualizar, heroiAtualizar);
-            if(!resultado) {
+            const resultado = await Database.atualizar(idParaATualizar, heroiAtualizar);
+
+            if (!resultado) {
                 console.error('Não foi possivel atualizar!');
                 return;
             }
+
             console.log('Atualizado com sucesso!');
+            return;
         }
 
     } catch (error) {
         console.error('DEU RUIM', error);
     }
+
 }
 
 main();
