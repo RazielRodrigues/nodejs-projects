@@ -24,7 +24,7 @@ class Database {
 
     async cadastrar(heroi){
         const dados = await this.obterDadosArquivo();
-        const id = heroi.id <= 2 ? heroi.id : Database.now();
+        const id = heroi.id <= 2 ? heroi.id : Date.now();
 
         // concatenação de objetos
         const heroiComId = {
@@ -45,6 +45,41 @@ class Database {
         const dados = await this.obterDadosArquivo();
         const dadosFiltrados = dados.filter( item => (id ? (item.id === id) : true ));
         return dadosFiltrados;
+    }
+
+    async remover(id){
+        if(!id) return await this.escreverArquivo();
+
+        const dados = await this.obterDadosArquivo();
+        const indice = dados.findIndex(item => item.id === parseInt(id));
+
+        if (!indice === -1) {
+            throw new Error('Usuario nao existe');
+        }
+        
+        dados.splice(indice, 1);
+
+        return await this.escreverArquivo(dados);
+    }
+
+    async atualizar(id, modificacoes){
+        const dados = await this.obterDadosArquivo();
+        const indice = dados.findIndex(item => item.id === parseInt(id));
+
+        if (!indice === -1) throw new Error('Heroi nao existe');
+        
+        const atual = dados[indice];
+        const objetosAtualizar = {
+            ...atual,
+            ...modificacoes
+        }
+        dados.splice(indice, 1);
+
+        return await this.escreverArquivo([
+            ...dados,
+            objetosAtualizar
+        ]);
+
     }
 
 }
