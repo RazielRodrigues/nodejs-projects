@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -14,22 +15,37 @@
         font-family: sans-serif;
         background-color: whitesmoke;
     }
-    input {
-        width: fit-content;
+
+    #search_data,
+    #search_data_button,
+    #search_data_result {
+        width: 100%;
+        margin-top: 10px;
     }
 </style>
 
 <body>
     <h1>
-        HELLO ENTER YOUR DESTINATION BELOW!
+        GET SOME DATA FROM YOUR GITHUB!
     </h1>
     <main>
         <section>
-            <form id="search" method="post">
-                <label for="search_data">Destination</label>
-                <input type="text" name="search_data" id="search_data">
-            </form>
+            <input type="text" name="search_data" id="search_data">
+            <button id="search_data_button">SEARCH</button>
         </section>
+        <textarea name="data" id="search_data_result" cols="50" rows="25"></textarea>
     </main>
+
+    <script>
+
+        fetch('http://localhost:3000/api')
+            .then((res) => res.json())
+            .then((json) => {
+                document.getElementById('search_data_result').value = JSON.stringify(json);
+            })
+
+    </script>
+
 </body>
+
 </html>

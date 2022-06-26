@@ -4,6 +4,7 @@ const server = express()
 const mongoose = restful.mongoose
 const bodyParser = require('body-parser')
 const cors = require('cors')
+const main = require('./index.js')
 
 // Database
 mongoose.Promise = global.Promise
@@ -32,6 +33,11 @@ API.updateOptions({new: true, runValidators: true})
 // Routes
 Client.register(server, '/clients')
 API.register(server, '/api')
+server.get('/api/execute', async function (req, res) {
+
+    res.send(await main());
+})
+
 
 // Start Server
 server.listen(3000)
