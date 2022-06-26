@@ -4,27 +4,39 @@ const server = express()
 const mongoose = restful.mongoose
 const bodyParser = require('body-parser')
 const cors = require('cors')
+const api = require('./service/api');
 
-// Database
-mongoose.Promise = global.Promise
-mongoose.connect('mongodb://db/mydb')
+try {
+    
+    const exibir = async (exibir) => {
+        return await api.get(exibir)
+    }
+    Promise.all();
+    console.log(exibir());
+} catch (error) {
+    console.log(error);
+}
 
-// Middlewares
-server.use(bodyParser.urlencoded({extended:true}))
-server.use(bodyParser.json())
-server.use(cors())
+// // Database
+// mongoose.Promise = global.Promise
+// mongoose.connect('mongodb://db/mydb')
 
-// ODM
-const Client = restful.model('Client', {
-    name: { type: String, required: true }
-})
+// // Middlewares
+// server.use(bodyParser.urlencoded({extended:true}))
+// server.use(bodyParser.json())
+// server.use(cors())
 
-// Rest API
-Client.methods(['get', 'post', 'put', 'delete'])
-Client.updateOptions({new: true, runValidators: true})
+// // ODM
+// const Client = restful.model('Client', {
+//     name: { type: String, required: true }
+// })
 
-// Routes
-Client.register(server, '/clients')
+// // Rest API
+// Client.methods(['get', 'post', 'put', 'delete'])
+// Client.updateOptions({new: true, runValidators: true})
 
-// Start Server
-server.listen(3000)
+// // Routes
+// Client.register(server, '/clients')
+
+// // Start Server
+// server.listen(3000)
