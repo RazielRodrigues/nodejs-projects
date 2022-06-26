@@ -4,27 +4,6 @@ const server = express()
 const mongoose = restful.mongoose
 const bodyParser = require('body-parser')
 const cors = require('cors')
-const api = require('./service/api');
-
-
-async function main(){
-
-    try {
-
-        const results = [
-            {
-                github: await api.getGithub('RazielMiranda'),
-                starWars: await api.getStarWarsPeople('lars')
-            }
-        ]
-
-        return results
-
-    } catch (error) {
-        console.error('DEU RUIM!', error);
-    }
-
-}
 
 // Database
 mongoose.Promise = global.Promise
@@ -40,12 +19,19 @@ const Client = restful.model('Client', {
     name: { type: String, required: true }
 })
 
+const API = restful.model('API', {
+    response: { type: String, required: true }
+})
+
 // Rest API
 Client.methods(['get', 'post', 'put', 'delete'])
 Client.updateOptions({new: true, runValidators: true})
+API.methods(['get', 'post', 'put', 'delete'])
+API.updateOptions({new: true, runValidators: true})
 
 // Routes
 Client.register(server, '/clients')
+API.register(server, '/api')
 
 // Start Server
 server.listen(3000)

@@ -32,7 +32,7 @@ class Api {
   async getStarWarsPeople(name) {
     const url = `https://swapi.dev/api/people/?search=${name}&format=json`
     const {data} = await axios.get(url)
-    return JSON.parse(data.results);
+    return (data.results);
   }
 
 }
