@@ -6,16 +6,30 @@ const bodyParser = require('body-parser')
 const cors = require('cors')
 const api = require('./service/api');
 
-try {
-    
-    const exibir = async (exibir) => {
-        return await api.get(exibir)
+
+async function main(){
+
+    try {
+
+        const results = [
+            {
+                github: await api.getGithub('RazielMiranda'),
+                starWars: await api.getStarWarsPeople('lars')
+            }
+        ]
+
+        console.log(results);
+
+        // console.table(results);
+
+    } catch (error) {
+        console.error('DEU RUIM!', error);
     }
-    Promise.all();
-    console.log(exibir());
-} catch (error) {
-    console.log(error);
+
 }
+
+main();
+
 
 // // Database
 // mongoose.Promise = global.Promise
