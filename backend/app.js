@@ -18,9 +18,7 @@ async function main(){
             }
         ]
 
-        console.log(results);
-
-        // console.table(results);
+        return results
 
     } catch (error) {
         console.error('DEU RUIM!', error);
@@ -28,29 +26,26 @@ async function main(){
 
 }
 
-main();
+// Database
+mongoose.Promise = global.Promise
+mongoose.connect('mongodb://db/mydb')
 
+// Middlewares
+server.use(bodyParser.urlencoded({extended:true}))
+server.use(bodyParser.json())
+server.use(cors())
 
-// // Database
-// mongoose.Promise = global.Promise
-// mongoose.connect('mongodb://db/mydb')
+// ODM
+const Client = restful.model('Client', {
+    name: { type: String, required: true }
+})
 
-// // Middlewares
-// server.use(bodyParser.urlencoded({extended:true}))
-// server.use(bodyParser.json())
-// server.use(cors())
+// Rest API
+Client.methods(['get', 'post', 'put', 'delete'])
+Client.updateOptions({new: true, runValidators: true})
 
-// // ODM
-// const Client = restful.model('Client', {
-//     name: { type: String, required: true }
-// })
+// Routes
+Client.register(server, '/clients')
 
-// // Rest API
-// Client.methods(['get', 'post', 'put', 'delete'])
-// Client.updateOptions({new: true, runValidators: true})
-
-// // Routes
-// Client.register(server, '/clients')
-
-// // Start Server
-// server.listen(3000)
+// Start Server
+server.listen(3000)
