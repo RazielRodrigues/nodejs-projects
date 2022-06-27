@@ -4,7 +4,7 @@ const Context = require('./../db/strategies/base/contextStrategy');
 const heroisSchema = require('./../db/strategies/mongodb/schemas/heroisSchema.js');
 
 const MOCK_HEROI = { nome: 'Gaviao', poder: 'Flecha' }
-const MOCK_HEROI_ATUALIZAR = { nome: 'Batman', poder: 'Dinheiro' }
+const MOCK_HEROI_ATUALIZAR = { nome: 'Batman' + Date.now(), poder: 'Dinheiro' }
 
 let MOCK_HEROI_ATUALIZAR_ID = '';
 let context = {}

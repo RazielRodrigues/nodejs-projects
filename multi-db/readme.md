@@ -84,3 +84,7 @@
                 dataNascimento: '1998-01-01'
             })
         }
+
+#### HOW TO:
+
+    ...
