@@ -4,7 +4,7 @@ const Context = require('./../db/strategies/base/contextStrategy');
 
 const context = new Context(new MongoStrategy());
 const MOCK_HEROI = { nome: 'Gaviao', poder: 'Flecha' }
-// const MOCK_HEROI_ATUALIZAR = { nome: 'Batman', poder: 'Dinheiro' }
+const MOCK_HEROI_ATUALIZAR = { nome: 'Batman', poder: 'Dinheiro' }
 
 describe("Suite de testes Mongo Strategy", function () {
     // this.timeout(Infinity)
@@ -12,7 +12,7 @@ describe("Suite de testes Mongo Strategy", function () {
     this.beforeAll(async function () {
         await context.connect()
         // await context.delete()
-        // await context.create(MOCK_HEROI_ATUALIZAR)
+        await context.create(MOCK_HEROI_ATUALIZAR)
     })
 
     it("mongo connection", async function () {
@@ -27,12 +27,14 @@ describe("Suite de testes Mongo Strategy", function () {
         assert.deepEqual({ nome, poder }, MOCK_HEROI);
     })
 
-    // it("listar", async function () {
-    //     const [result] = await context.read({nome: MOCK_HEROI.nome})
-    //     delete result.id
+    it("listar", async function () {
+        const [ {nome, poder} ] = await context.read({nome: MOCK_HEROI.nome})
+        const result = {
+            nome, poder
+        }
 
-    //     assert.deepEqual(result, MOCK_HEROI);
-    // })
+        assert.deepEqual(result, MOCK_HEROI);
+    })
 
     // it("atualizar", async function() {
     //     const [itemAtualizar] = await context.read({nome: MOCK_HEROI_ATUALIZAR.nome})
@@ -49,12 +51,11 @@ describe("Suite de testes Mongo Strategy", function () {
 
     // })
 
-    // it("deletar", async function() {
+    it("deletar", async function() {
 
-    //     const [item] = await context.read({});
-    //     const result = await context.delete(item.id)
-    //     assert.deepEqual(result, 1);
+        // const result = await context.delete('62b917c908d06e0eb31845de')
+        // assert.deepEqual(undefined, 1);
 
-    // })
+    })
 
 })

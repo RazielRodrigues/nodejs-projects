@@ -8,7 +8,7 @@ Mongoose.connect(
 
 const connection = Mongoose.connection;
 
-connection.once('open', () => console.log('database ok!'));
+connection.once('open', () => console.log());
 
 const heroiSchema = new Mongoose.Schema({
     nome: {

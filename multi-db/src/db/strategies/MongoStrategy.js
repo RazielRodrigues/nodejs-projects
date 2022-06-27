@@ -63,19 +63,17 @@ class MongoStrategy extends IDb {
     return await this._herois.create(item)
   }
 
-  // async read(item = {}) {
-  //   const read = await model.find();
-  //   console.log('read: ', read);
-  // }
+  async read(item, skip = 0, limit = 10) {
+    return await this._herois.find(item).skip(skip).limit(limit);
+  }
 
   // async update(id, item) {
   //   return this._herois.update(item, { where: { id } });
   // }
 
-  // async delete(id) {
-  //   const query = id ? { id } : {};
-  //   return this._herois.destroy({ where: query });
-  // }
+  async delete(id) {
+    return this._herois.deleteOne({ _id: id });
+  }
 
 }
 
