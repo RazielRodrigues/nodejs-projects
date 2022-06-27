@@ -1,86 +1,81 @@
 const IDb = require('./interfaces/interfaceDb');
+const Mongoose = require('mongoose');
+
+const STATUS = {
+  0: 'disconectado',
+  1: 'conectado',
+  2: 'conectando',
+  3: 'disconectando'
+};
 
 class MongoStrategy extends IDb {
-  
-    constructor() {
-        super();
-        this._herois = null;
-        this._sequelize = null;
+
+  constructor() {
+    super();
+    this._herois = null;
+    this._driver = null;
+  }
+
+  async defineModel() {
+
+    const heroisSchema = new Mongoose.Schema({
+      nome: {
+        type: String,
+        required: true
+      },
+      poder: {
+        type: String,
+        required: true
+      },
+      insertedAt: {
+        type: Date,
+        default: new Date()
       }
-    
-      async defineModel() {
-        this._herois = this._sequelize.define(
-          'herois',
-          {
-            id: {
-              type: Sequelize.INTEGER,
-              required: true,
-              primaryKey: true,
-              autoIncrement: true,
-            },
-            nome: {
-              type: Sequelize.STRING,
-              required: true,
-            },
-            poder: {
-              type: Sequelize.STRING,
-              required: true,
-            },
-          },
-          {
-            //opcoes para base existente
-            tableName: 'TB_HEROIS',
-            freezeTableName: false,
-            timestamps: false,
-          },
-        );
-      }
-    
-      async connect() {
-        this._sequelize = new Sequelize(
-          'herois',
-          'admin',
-          'admin',
-          {
-              host: 'localhost',
-              dialect: 'postgres',
-              quoteIdentifiers: false,
-              operatorAliases: false
-          }
-        );
-    
-        await this.defineModel();
-      }
-    
-      async isConnected() {
-        try {
-          await this._sequelize.authenticate();
-          return true;
-        } catch (error) {
-          console.error('fail!', error);
-          return false;
-        }
-      }
-    
-      async create(item) {
-        const {
-          dataValues
-        } = await this._herois.create(item, { raw: true });
-        return dataValues;
-      }
-    
-      async read(item = {}) {
-        return this._herois.findAll({ where: item, raw: true });
-      }
-    
-      async update(id, item) {
-        return this._herois.update(item, { where: { id } });
-      }
-    
-      async delete(id) {
-        const query = id ? { id } : {};
-        return this._herois.destroy({ where: query });
-      }
+    });
+
+    this._herois = Mongoose.model('herois', heroisSchema);
+  }
+
+  async connect() {
+    Mongoose.connect(
+      'mongodb://admin:admin@localhost:27017',
+      { useNewUrlParser: true }, function (error) {
+        if (!error) return;
+        console.log('conexao monga!', error);
+      });
+    const connection = Mongoose.connection;
+    this._driver = connection;
+    connection.once('open', () => console.log('database ok!'));
+    this.defineModel();
+  }
+
+  async isConnected() {
+    const state = STATUS[this._driver.readyState]
+    if (state === 'conectado') return state;
+    if (state !== 'conectando') return state;
+
+    await new Promise(resolve => setTimeout(resolve, 1000))
+
+    return STATUS[this._driver.readyState];
+  }
+
+  async create(item) {
+    return await this._herois.create(item)
+  }
+
+  // async read(item = {}) {
+  //   const read = await model.find();
+  //   console.log('read: ', read);
+  // }
+
+  // async update(id, item) {
+  //   return this._herois.update(item, { where: { id } });
+  // }
+
+  // async delete(id) {
+  //   const query = id ? { id } : {};
+  //   return this._herois.destroy({ where: query });
+  // }
 
 }
 

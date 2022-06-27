@@ -1,6 +1,6 @@
 const Mongoose = require('mongoose');
 Mongoose.connect(
-    'Mongo://admin:admin@localhost:27017',
+    'mongodb://admin:admin@localhost:27017',
     { useNewUrlParser: true }, function (error){
         if(!error) return;
         console.log('conexao monga!', error);
