@@ -19,7 +19,7 @@ class ContextStrategy extends IDb {
   delete(id) {
     return this._database.delete(id);
   }
-  connect() {
+  static connect() {
     return this._database.connect();
   }
 }
