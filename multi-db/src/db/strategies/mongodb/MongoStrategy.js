@@ -49,7 +49,7 @@ class MongoStrategy extends IDb {
   }
 
   async update(id, item) {
-    return this._collection.updateOne({_id: id}, { $set: item})
+    return this._schema.updateOne({_id: id}, { $set: item})
   }
   
   async delete(id) {

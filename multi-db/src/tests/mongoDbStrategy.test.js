@@ -6,7 +6,7 @@ const heroisSchema = require('./../db/strategies/mongodb/schemas/heroisSchema.js
 const MOCK_HEROI = { nome: 'Gaviao', poder: 'Flecha' }
 const MOCK_HEROI_ATUALIZAR = { nome: 'Batman', poder: 'Dinheiro' }
 
-let MOCK_HEROI_ID = '';
+let MOCK_HEROI_ATUALIZAR_ID = '';
 let context = {}
 
 describe("Suite de testes Mongo Strategy", function () {
@@ -17,7 +17,7 @@ describe("Suite de testes Mongo Strategy", function () {
 
         await context.create(MOCK_HEROI_ATUALIZAR)
         const result = await context.create(MOCK_HEROI);
-        MOCK_HEROI_ID = result._id;
+        MOCK_HEROI_ATUALIZAR_ID = result._id;
 
     })
 
@@ -42,24 +42,16 @@ describe("Suite de testes Mongo Strategy", function () {
         assert.deepEqual(result, MOCK_HEROI);
     })
 
-    it.only("atualizar", async function() {
-        const [itemAtualizar] = await context.read({nome: MOCK_HEROI_ATUALIZAR.nome})
-
-        const novoItem = {
-            ...MOCK_HEROI_ATUALIZAR,
-            nome: 'Mulher Maravilha'
-        }
-
-        const [result] = await context.update(itemAtualizar.id, novoItem)
-        const [itemAtualizado] = await context.read({id: itemAtualizar.id})
-        assert.deepEqual(result, 1);
-        assert.deepEqual(itemAtualizado.nome, novoItem.nome);
-
+    it('atualizar', async () => {
+        const result = await context.update(MOCK_HEROI_ATUALIZAR_ID, {
+            poder: 'Laço'
+        })
+        assert.deepEqual(result.modifiedCount, 1)
     })
 
-    // it("deletar", async function() {
-        // const result = await context.delete('62b917c908d06e0eb31845de')
-        // assert.deepEqual(undefined, 1);
-    // })
+    it('remover', async () => {
+        const result = await context.delete(MOCK_HEROI_ATUALIZAR_ID)
+        assert.deepEqual(result.deletedCount, 1)
+    })
 
 })
