@@ -1,9 +1,7 @@
-const IDb = require('./base/interfaceDb');
+const IDb = require('./interfaces/interfaceDb');
 const Sequelize = require('sequelize');
-class PostgreSQLConnection {
-  static connect() {}
-}
-class PostgreSQLStrategy extends IDb {
+
+class PostgresStrategy extends IDb {
 
   constructor() {
     super();
@@ -87,4 +85,4 @@ class PostgreSQLStrategy extends IDb {
 
 }
 
-module.exports = PostgreSQLStrategy;
+module.exports = PostgresStrategy;

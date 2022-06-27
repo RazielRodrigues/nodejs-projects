@@ -1,11 +1,11 @@
 const IDb = require('./base/interfaceDb');
-class MongoDBStrategy extends IDb {
+class Mongo extends IDb {
   constructor() {
     super();
   }
   create(item) {
-    return 'MongoDB';
+    return 'Mongo';
   }
 }
 
-module.exports = MongoDBStrategy;
+module.exports = Mongo;

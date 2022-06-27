@@ -1,4 +1,4 @@
-const IDb = require('./interfaceDb');
+const IDb = require('../interfaces/interfaceDb');
 class ContextStrategy extends IDb {
   constructor(database) {
     super();
