@@ -8,11 +8,11 @@ const app = new Hapi.Server({
     port: 5000
 });
 
-function mapRoutes(instance, methods){
+function mapRoutes(instance, methods) {
     return methods.map(method => instance[method]())
 }
 
-async function main(){
+async function main() {
     const connection = MongoStrategy.connect();
     const context = new Context(new MongoStrategy(connection, heroisSchema));
 

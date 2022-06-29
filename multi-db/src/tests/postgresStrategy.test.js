@@ -10,7 +10,7 @@ let context = {}
 
 describe("Suite de testes PostgresStrategy Strategy", function () {
     this.timeout(Infinity)
-    this.beforeAll(async function(){
+    this.beforeAll(async function () {
         const connection = await PostgresStrategy.connect();
         const model = await PostgresStrategy.defineModel(connection, HeroisSchema)
         context = new Context(new PostgresStrategy(connection, model));
@@ -32,14 +32,14 @@ describe("Suite de testes PostgresStrategy Strategy", function () {
     })
 
     it("listar", async function () {
-        const [result] = await context.read({nome: MOCK_HEROI.nome})
+        const [result] = await context.read({ nome: MOCK_HEROI.nome })
         delete result.id
 
         assert.deepEqual(result, MOCK_HEROI);
     })
 
-    it("atualizar", async function() {
-        const [itemAtualizar] = await context.read({nome: MOCK_HEROI_ATUALIZAR.nome})
+    it("atualizar", async function () {
+        const [itemAtualizar] = await context.read({ nome: MOCK_HEROI_ATUALIZAR.nome })
 
         const novoItem = {
             ...MOCK_HEROI_ATUALIZAR,
@@ -47,14 +47,14 @@ describe("Suite de testes PostgresStrategy Strategy", function () {
         }
 
         const [result] = await context.update(itemAtualizar.id, novoItem)
-        const [itemAtualizado] = await context.read({id: itemAtualizar.id})
+        const [itemAtualizado] = await context.read({ id: itemAtualizar.id })
         assert.deepEqual(result, 1);
         assert.deepEqual(itemAtualizado.nome, novoItem.nome);
 
     })
 
-    it("deletar", async function() {
-        
+    it("deletar", async function () {
+
         const [item] = await context.read({});
         const result = await context.delete(item.id)
         assert.deepEqual(result, 1);

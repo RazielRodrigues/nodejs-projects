@@ -18,14 +18,14 @@ describe.only('Suite de testes API', function () {
 
         const dados = JSON.parse(result.payload)
         const status = result.statusCode;
-        
+
         assert.deepEqual(status, 200);
         assert.ok(Array.isArray(dados));
 
     });
 
     it("Listar /herois deve retornar apenas 3", async () => {
-        const limit = 3; 
+        const limit = 3;
         const result = await app.inject({
             method: 'GET',
             url: `/herois?skip=0&limit=${limit}`
@@ -60,11 +60,25 @@ describe.only('Suite de testes API', function () {
         })
 
         const status = result.statusCode;
-        const { message, _id} = JSON.parse(result.payload);
+        const { message, _id } = JSON.parse(result.payload);
         // assert.ok(status === 200);
         assert.notStrictEqual(_id, expected, undefined);
         assert.deepEqual(message, "Heroi cadastrado com sucesso");
     });
 
+    it("remover /herois", async () => {
+        const _id = MOCK_ID;
+        const result = await app.inject({
+            method: 'DELETE',
+            url: `/herois`,
+            payload: JSON.stringify(MOCK_HEROI)
+        })
+
+        const status = result.statusCode;
+        const { message } = JSON.parse(result.payload);
+        assert.ok(status === 200);
+        // assert.notStrictEqual(_id, expected, undefined);
+        assert.deepEqual(message, "Heroi removido com sucesso");
+    });
 
 });

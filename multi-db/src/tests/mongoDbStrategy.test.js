@@ -34,7 +34,7 @@ describe("Suite de testes Mongo Strategy", function () {
     })
 
     it("listar", async function () {
-        const [ {nome, poder} ] = await context.read({nome: MOCK_HEROI.nome})
+        const [{ nome, poder }] = await context.read({ nome: MOCK_HEROI.nome })
         const result = {
             nome, poder
         }

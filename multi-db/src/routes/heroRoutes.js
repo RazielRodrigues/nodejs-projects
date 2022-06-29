@@ -1,5 +1,6 @@
 const BaseRoute = require('./base/baseRoute');
 const Joi = require('joi');
+const boom = require('boom');
 
 const failAction = (request, header, erro) => {
     throw erro;
@@ -38,8 +39,7 @@ class HeroRoutes extends BaseRoute {
 
                     return this.db.read(nome ? query : {}, skip, limit)
                 } catch (error) {
-                    console.log(error);
-                    return 'erro no server'
+                    return boom.internal()
                 }
             }
         }
@@ -62,15 +62,43 @@ class HeroRoutes extends BaseRoute {
             },
             handler: async (request) => {
                 try {
-                    const {nome, poder} = request.payload;
-                    const results = await this.db.create({nome, poder});
+                    const { nome, poder } = request.payload;
+                    const results = await this.db.create({ nome, poder });
                     return {
                         message: 'Heroi cadastrado com sucesso',
                         _id: results._id
                     }
                 } catch (error) {
-                    console.log('DEU RUIM');
-                    return 'BO!';
+                    return boom.internal()
+                }
+            }
+        }
+    }
+
+    delete() {
+        return {
+            path: 'herois/{id}',
+            method: 'DELETE',
+            config: {
+                failAction,
+                validate: {
+                    params: {
+                        id: Joi.string().required
+                    },
+                },
+            },
+            handler: async (request) => {
+                try {
+                    const { id } = request.params;
+                    const resultado = await this.db.delete(id);
+                    if (resultado.n !== 1) {
+                        return boom.preconditionFailed('nao achou no banco')
+                    }
+                    return {
+                        message: 'Heroi removido com sucesso'
+                    }
+                } catch (error) {
+                    return boom.internal()
                 }
             }
         }
